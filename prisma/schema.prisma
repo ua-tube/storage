@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model File {
+  id               String        @id @db.Uuid
+  groupId          String        @map("group_id") @db.Uuid
+  category         String
+  filename         String        @map("filename")
+  originalFileName String        @map("original_filename")
+  url              String
+  userId           String?       @map("user_id")
+  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  FileTracking     FileTracking?
+
+  @@map("files")
+}
+
+model FileTracking {
+  id        String     @id @default(uuid()) @db.Uuid
+  fileId    String     @unique @db.Uuid
+  file      File       @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  status    FileStatus
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime   @updatedAt
+
+  @@map("file_tracking")
+}
+
+enum FileStatus {
+  PendingToRemove
+  InUse
+  Removed
+  FailedToRemove
+
+  @@map("file_status")
+}
