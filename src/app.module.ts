@@ -25,6 +25,7 @@ import { DiskCleanerModule } from './disk-cleaner/disk-cleaner.module';
         DATABASE_URL: Joi.string().required(),
         RABBITMQ_URL: Joi.string().required(),
         RABBITMQ_VIDEO_PROCESSOR_QUEUE: Joi.string().required(),
+        RABBITMQ_VIDEO_MANAGER_QUEUE: Joi.string().required(),
       }),
     }),
     StorageModule,

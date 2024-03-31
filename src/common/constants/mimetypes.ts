@@ -14,4 +14,4 @@ export const videoMimetypes = [
   'application/vnd.rn-realmedia-vbr',
 ];
 
-export const imageMimetypes = ['image/png', 'image/jpeg'];
+export const imageMimetypes = ['image/png', 'image/jpeg', 'image/webp'];

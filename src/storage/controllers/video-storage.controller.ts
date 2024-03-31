@@ -21,6 +21,7 @@ import {
   ServiceUploadInfo,
   VideoUploadTokenInfo,
 } from '../../common/decorators';
+import { TServiceUploadInfo } from '../../common/types';
 
 @Controller('storage/videos')
 export class VideoStorageController {
@@ -47,12 +48,12 @@ export class VideoStorageController {
   @Post('internal')
   async serviceUploadVideo(
     @UploadedFile() file: Express.Multer.File,
-    @ServiceUploadInfo() info: any,
+    @ServiceUploadInfo() info: TServiceUploadInfo,
   ) {
     if (!file) {
       throw new BadRequestException('no file provided');
     }
 
-    console.log(info);
+    return this.videoStorageService.serviceUploadVideo(info, file)
   }
 }

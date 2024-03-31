@@ -11,16 +11,18 @@ import {
   AuthInternalGuard,
   AuthUserGuard,
 } from '../../common/guards';
-import { multerImageInterceptor } from '../../common/interceptors';
+import { multerServiceImageInterceptor, multerUserImageInterceptor } from '../../common/interceptors';
 import { ImageStorageService } from '../services';
-import { ImageUploadTokenInfo } from '../../common/decorators';
+import { ImageUploadTokenInfo, ServiceUploadInfo } from '../../common/decorators';
+import { TServiceUploadInfo } from '../../common/types';
 
-@UseInterceptors(multerImageInterceptor)
 @Controller('storage/images')
 export class ImageStorageController {
-  constructor(private readonly imageStorageService: ImageStorageService) {}
+  constructor(private readonly imageStorageService: ImageStorageService) {
+  }
 
   @UseGuards(AuthUserGuard, AuthImageUploadTokenGuard)
+  @UseInterceptors(multerUserImageInterceptor)
   @Post()
   async userUploadImage(
     @UploadedFile() file: Express.Multer.File,
@@ -34,12 +36,16 @@ export class ImageStorageController {
   }
 
   @UseGuards(AuthInternalGuard)
+  @UseInterceptors(multerServiceImageInterceptor)
   @Post('internal')
-  async serviceUploadImage(@UploadedFile() file: Express.Multer.File) {
+  async serviceUploadImage(
+    @UploadedFile() file: Express.Multer.File,
+    @ServiceUploadInfo() info: TServiceUploadInfo,
+  ) {
     if (!file) {
       throw new BadRequestException('no file provided');
     }
 
-    return this.imageStorageService.serviceUploadImage();
+    return this.imageStorageService.serviceUploadImage(info, file);
   }
 }

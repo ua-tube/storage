@@ -6,18 +6,18 @@ import { extname, join } from 'node:path';
 import { imageMimetypes } from '../constants';
 import { randomUUID } from 'crypto';
 
-export const multerImageInterceptor = FileInterceptor('file', {
+export const multerUserImageInterceptor = FileInterceptor('file', {
   storage: diskStorage({
     destination: async (req, file, callback) => {
-      const videosFolderPath = join(
+      const imagesFolderPath = join(
         process.cwd(),
         'public',
         'images',
         req.res.locals.imageUploadTokenInfo.category,
         req.res.locals.imageUploadTokenInfo.imageId,
       );
-      await mkdir(videosFolderPath, { recursive: true });
-      callback(null, videosFolderPath);
+      await mkdir(imagesFolderPath, { recursive: true });
+      callback(null, imagesFolderPath);
     },
     filename: (req, file, callback) => {
       callback(null, `${randomUUID()}${extname(file.originalname)}`);
