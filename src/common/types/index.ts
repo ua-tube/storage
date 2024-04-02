@@ -1,5 +1,5 @@
 export type TServiceUploadInfo = {
-  groupId: string
-  fileId: string
-  category: string
-}
+  groupId: string;
+  fileId: string;
+  category: string;
+};

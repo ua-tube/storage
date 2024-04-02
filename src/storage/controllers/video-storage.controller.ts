@@ -54,6 +54,6 @@ export class VideoStorageController {
       throw new BadRequestException('no file provided');
     }
 
-    return this.videoStorageService.serviceUploadVideo(info, file)
+    return this.videoStorageService.serviceUploadVideo(info, file);
   }
 }

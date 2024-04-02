@@ -9,7 +9,10 @@ import { ImageStorageService, VideoStorageService } from './services';
 import { JwtModule } from '@nestjs/jwt';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
-import { VIDEO_MANAGER_SERVICE, VIDEO_PROCESSOR_SERVICE } from '../common/constants';
+import {
+  VIDEO_MANAGER_SERVICE,
+  VIDEO_PROCESSOR_SERVICE,
+} from '../common/constants';
 
 @Module({
   imports: [

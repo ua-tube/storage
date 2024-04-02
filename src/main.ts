@@ -26,14 +26,12 @@ async function bootstrap() {
   app.use(helmet.noSniff());
   app.use(helmet.hidePoweredBy());
   app.use(helmet.contentSecurityPolicy());
-
   app.use(mw());
+  app.use('/', serveStatic(join(process.cwd(), 'public'), { maxAge: '1d' }));
 
   app.setGlobalPrefix('/api');
-
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-
-  app.use('/', serveStatic(join(process.cwd(), 'public'), { maxAge: '1d' }));
+  app.enableShutdownHooks();
 
   await app.listen(
     configService.get<number>('HTTP_PORT'),

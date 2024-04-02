@@ -7,8 +7,7 @@ import { TServiceUploadInfo } from '../../common/types';
 export class ImageStorageService {
   private readonly logger = new Logger(ImageStorageService.name);
 
-  constructor(private readonly prisma: PrismaService) {
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   async userUploadImage(info: any, file: Express.Multer.File) {
     const image = await this.prisma.file.create({
@@ -28,7 +27,10 @@ export class ImageStorageService {
     return this.trackImage(image);
   }
 
-  async serviceUploadImage(info: TServiceUploadInfo, file: Express.Multer.File) {
+  async serviceUploadImage(
+    info: TServiceUploadInfo,
+    file: Express.Multer.File,
+  ) {
     const image = await this.prisma.file.create({
       data: {
         id: info.fileId,
@@ -39,9 +41,7 @@ export class ImageStorageService {
         url: `/images/${info.category}/${info.groupId}/${file.filename}`,
       },
     });
-    this.logger.log(
-      `Image file (${image.id}) is uploaded from service`,
-    );
+    this.logger.log(`Image file (${image.id}) is uploaded from service`);
     return this.trackImage(image);
   }
 

@@ -11,15 +11,20 @@ import {
   AuthInternalGuard,
   AuthUserGuard,
 } from '../../common/guards';
-import { multerServiceImageInterceptor, multerUserImageInterceptor } from '../../common/interceptors';
+import {
+  multerServiceImageInterceptor,
+  multerUserImageInterceptor,
+} from '../../common/interceptors';
 import { ImageStorageService } from '../services';
-import { ImageUploadTokenInfo, ServiceUploadInfo } from '../../common/decorators';
+import {
+  ImageUploadTokenInfo,
+  ServiceUploadInfo,
+} from '../../common/decorators';
 import { TServiceUploadInfo } from '../../common/types';
 
 @Controller('storage/images')
 export class ImageStorageController {
-  constructor(private readonly imageStorageService: ImageStorageService) {
-  }
+  constructor(private readonly imageStorageService: ImageStorageService) {}
 
   @UseGuards(AuthUserGuard, AuthImageUploadTokenGuard)
   @UseInterceptors(multerUserImageInterceptor)

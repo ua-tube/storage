@@ -7,7 +7,10 @@ import {
 import { PrismaService } from '../../prisma';
 import { File, FileStatus } from '@prisma/client';
 import { ClientRMQ } from '@nestjs/microservices';
-import { VIDEO_MANAGER_SERVICE, VIDEO_PROCESSOR_SERVICE } from '../../common/constants';
+import {
+  VIDEO_MANAGER_SERVICE,
+  VIDEO_PROCESSOR_SERVICE,
+} from '../../common/constants';
 import { VideoUploadedEvent } from '../../common/events';
 import { TServiceUploadInfo } from '../../common/types';
 import { lastValueFrom } from 'rxjs';
@@ -22,18 +25,33 @@ export class VideoStorageService implements OnApplicationBootstrap {
     @Inject(VIDEO_MANAGER_SERVICE)
     private readonly videoManagerClient: ClientRMQ,
     private readonly prisma: PrismaService,
-  ) {
-  }
+  ) {}
 
   onApplicationBootstrap() {
     this.videoProcessorClient
       .connect()
-      .then(() => this.logger.log(`${VIDEO_PROCESSOR_SERVICE} RabbitMQ connection established`))
-      .catch(() => this.logger.error(`${VIDEO_PROCESSOR_SERVICE} RabbitMQ connection failed`));
+      .then(() =>
+        this.logger.log(
+          `${VIDEO_PROCESSOR_SERVICE} RabbitMQ connection established`,
+        ),
+      )
+      .catch(() =>
+        this.logger.error(
+          `${VIDEO_PROCESSOR_SERVICE} RabbitMQ connection failed`,
+        ),
+      );
     this.videoManagerClient
       .connect()
-      .then(() => this.logger.log(`${VIDEO_MANAGER_SERVICE} RabbitMQ connection established`))
-      .catch(() => this.logger.error(`${VIDEO_MANAGER_SERVICE} RabbitMQ connection failed`));
+      .then(() =>
+        this.logger.log(
+          `${VIDEO_MANAGER_SERVICE} RabbitMQ connection established`,
+        ),
+      )
+      .catch(() =>
+        this.logger.error(
+          `${VIDEO_MANAGER_SERVICE} RabbitMQ connection failed`,
+        ),
+      );
   }
 
   async userUploadVideo(info: any, file: Express.Multer.File) {
@@ -72,7 +90,10 @@ export class VideoStorageService implements OnApplicationBootstrap {
     return this.trackVideo(video);
   }
 
-  async serviceUploadVideo(info: TServiceUploadInfo, file: Express.Multer.File) {
+  async serviceUploadVideo(
+    info: TServiceUploadInfo,
+    file: Express.Multer.File,
+  ) {
     const video = await this.prisma.file.create({
       data: {
         id: info.fileId,
@@ -84,9 +105,7 @@ export class VideoStorageService implements OnApplicationBootstrap {
       },
     });
 
-    this.logger.log(
-      `Video file (${video.id}) is uploaded from service`,
-    );
+    this.logger.log(`Video file (${video.id}) is uploaded from service`);
     this.logger.log(`Video file (${video.id}) is sent to process service`);
     return this.trackVideo(video);
   }
