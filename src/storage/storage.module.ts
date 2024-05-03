@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../prisma';
 import {
-  HealthController,
   ImageStorageController,
   VideoStorageController,
 } from './controllers';
@@ -56,7 +55,6 @@ import {
   controllers: [
     ImageStorageController,
     VideoStorageController,
-    HealthController,
   ],
   providers: [ImageStorageService, VideoStorageService],
 })

@@ -5,6 +5,7 @@ import Joi from 'joi';
 import { LoggingInterceptor } from './common/interceptors';
 import { StorageModule } from './storage/storage.module';
 import { DiskCleanerModule } from './disk-cleaner/disk-cleaner.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { DiskCleanerModule } from './disk-cleaner/disk-cleaner.module';
     }),
     StorageModule,
     DiskCleanerModule,
+    HealthModule
   ],
   providers: [
     {
