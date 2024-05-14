@@ -5,7 +5,6 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { isEmpty } from 'class-validator';
@@ -23,7 +22,7 @@ export class AuthImageUploadTokenGuard implements CanActivate {
   ) {}
 
   public async canActivate(ctx: ExecutionContext): Promise<boolean> | never {
-    const req: Request = ctx.switchToHttp().getRequest();
+    const req = ctx.switchToHttp().getRequest();
 
     const token = req.query.token as string;
 
@@ -48,7 +47,7 @@ export class AuthImageUploadTokenGuard implements CanActivate {
       throw new BadRequestException('Upload token is malformed');
     }
 
-    req.res.locals.imageUploadTokenInfo = {
+    req.imageUploadTokenInfo = {
       userId: payload?.userId,
       category: payload?.category,
       imageId: payload?.imageId,
