@@ -13,6 +13,7 @@ model File {
   category         String
   filename         String        @map("filename")
   originalFileName String        @map("original_filename")
+  fileSize         BigInt        @map("file_size")
   url              String
   userId           String?       @map("user_id")
   createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)

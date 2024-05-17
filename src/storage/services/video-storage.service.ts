@@ -32,24 +32,24 @@ export class VideoStorageService implements OnApplicationBootstrap {
       .connect()
       .then(() =>
         this.logger.log(
-          `${VIDEO_PROCESSOR_SERVICE} RabbitMQ connection established`,
+          `${VIDEO_PROCESSOR_SERVICE} connection established`,
         ),
       )
       .catch(() =>
         this.logger.error(
-          `${VIDEO_PROCESSOR_SERVICE} RabbitMQ connection failed`,
+          `${VIDEO_PROCESSOR_SERVICE} connection failed`,
         ),
       );
     this.videoManagerClient
       .connect()
       .then(() =>
         this.logger.log(
-          `${VIDEO_MANAGER_SERVICE} RabbitMQ connection established`,
+          `${VIDEO_MANAGER_SERVICE} connection established`,
         ),
       )
       .catch(() =>
         this.logger.error(
-          `${VIDEO_MANAGER_SERVICE} RabbitMQ connection failed`,
+          `${VIDEO_MANAGER_SERVICE} connection failed`,
         ),
       );
   }
@@ -62,6 +62,7 @@ export class VideoStorageService implements OnApplicationBootstrap {
         userId: info.creatorId,
         category: info.category,
         filename: file.filename,
+        fileSize: BigInt(file.size),
         originalFileName: file.originalname,
         url: `/videos/${info.category}/${info.videoId}/${file.filename}`,
       },
@@ -100,13 +101,13 @@ export class VideoStorageService implements OnApplicationBootstrap {
         groupId: info.groupId,
         category: info.category,
         filename: file.filename,
+        fileSize: BigInt(file.size),
         originalFileName: file.originalname,
         url: `/videos/${info.category}/${info.groupId}/${file.filename}`,
       },
     });
 
     this.logger.log(`Video file (${video.id}) is uploaded from service`);
-    this.logger.log(`Video file (${video.id}) is sent to process service`);
     return this.trackVideo(video);
   }
 
