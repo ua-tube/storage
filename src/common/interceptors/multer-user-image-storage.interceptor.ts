@@ -8,13 +8,13 @@ import { randomUUID } from 'crypto';
 
 export const multerUserImageInterceptor = FileInterceptor('file', {
   storage: diskStorage({
-    destination: async (req, file, callback) => {
+    destination: async (req: any, file, callback) => {
       const imagesFolderPath = join(
         process.cwd(),
         'public',
         'images',
-        req.res.locals.imageUploadTokenInfo.category,
-        req.res.locals.imageUploadTokenInfo.imageId,
+        req.imageUploadTokenInfo.category,
+        req.imageUploadTokenInfo.imageId,
       );
       await mkdir(imagesFolderPath, { recursive: true });
       callback(null, imagesFolderPath);

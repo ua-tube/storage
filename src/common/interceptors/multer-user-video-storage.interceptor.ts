@@ -8,13 +8,13 @@ import { videoMimetypes } from '../constants';
 
 export const multerUserVideoInterceptor = FileInterceptor('file', {
   storage: diskStorage({
-    destination: async (req, file, callback) => {
+    destination: async (req: any, file, callback) => {
       const videosFolderPath = join(
         process.cwd(),
         'public',
         'videos',
-        req.res.locals.videoUploadTokenInfo.category,
-        req.res.locals.videoUploadTokenInfo.videoId,
+        req.videoUploadTokenInfo.category,
+        req.videoUploadTokenInfo.videoId,
       );
       await mkdir(videosFolderPath, { recursive: true });
       callback(null, videosFolderPath);

@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../prisma';
 import { ImageStorageController, VideoStorageController } from './controllers';
-import { ImageStorageService, VideoStorageService } from './services';
+import {
+  ImageStorageService,
+  TokenService,
+  VideoStorageService,
+} from './services';
 import { JwtModule } from '@nestjs/jwt';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
@@ -12,7 +16,14 @@ import {
 
 @Module({
   imports: [
-    JwtModule.register({}),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        subject: 'upload-token',
+        secret: configService.get<string>('JWT_SECRET'),
+        audience: configService.get<string>('JWT_AUDIENCE'),
+      }),
+    }),
     ClientsModule.registerAsync([
       {
         name: VIDEO_MANAGER_SERVICE,
@@ -50,6 +61,6 @@ import {
     PrismaModule,
   ],
   controllers: [ImageStorageController, VideoStorageController],
-  providers: [ImageStorageService, VideoStorageService],
+  providers: [ImageStorageService, VideoStorageService, TokenService],
 })
 export class StorageModule {}

@@ -5,16 +5,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { isEmpty } from 'class-validator';
+import { TokenService } from '../../storage/services';
 
 @Injectable()
 export class AuthVideoUploadTokenGuard implements CanActivate {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly tokenService: TokenService) {}
 
   public async canActivate(ctx: ExecutionContext): Promise<boolean> | never {
     const req = ctx.switchToHttp().getRequest();
@@ -25,20 +21,13 @@ export class AuthVideoUploadTokenGuard implements CanActivate {
       throw new UnauthorizedException('No upload token provided');
     }
 
-    let payload: any;
-    try {
-      payload = await this.jwtService.verifyAsync(token, {
-        subject: 'upload-token',
-        secret: this.configService.get<string>('JWT_SECRET'),
-        audience: this.configService.get<string>('JWT_AUDIENCE'),
-        issuer: this.configService.get<string>('JWT_VIDEO_UT_ISSUER'),
-        ignoreExpiration: false,
-      });
-    } catch {
-      throw new UnauthorizedException('Failed to validate upload token');
-    }
+    const payload = await this.tokenService.verifyAsync<{
+      category?: string;
+      creatorId?: string;
+      videoId?: string;
+    }>(token, 'VIDEO');
 
-    if (payload.category !== 'user-uploaded-raw-video') {
+    if (payload?.category !== 'user-uploaded-raw-video') {
       throw new BadRequestException('Upload token is malformed');
     }
 

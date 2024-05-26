@@ -37,7 +37,11 @@ export class ImageStorageController {
       throw new BadRequestException('no file provided');
     }
 
-    return this.imageStorageService.userUploadImage(info, file);
+    const image = await this.imageStorageService.userUploadImage(info, file);
+    return {
+      ...image,
+      fileSize: String(image.fileSize)
+    }
   }
 
   @UseGuards(AuthInternalGuard)
@@ -51,6 +55,10 @@ export class ImageStorageController {
       throw new BadRequestException('no file provided');
     }
 
-    return this.imageStorageService.serviceUploadImage(info, file);
+    const image = await this.imageStorageService.serviceUploadImage(info, file);
+    return {
+      ...image,
+      fileSize: String(image.fileSize)
+    }
   }
 }

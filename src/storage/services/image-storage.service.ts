@@ -2,12 +2,16 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma';
 import { File, FileStatus } from '@prisma/client';
 import { TServiceUploadInfo } from '../../common/types';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class ImageStorageService {
   private readonly logger = new Logger(ImageStorageService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly tokenService: TokenService,
+  ) {}
 
   async userUploadImage(info: any, file: Express.Multer.File) {
     const image = await this.prisma.file.create({
@@ -25,7 +29,23 @@ export class ImageStorageService {
     this.logger.log(
       `Image file (${image.id}) is uploaded from user (${image.userId})`,
     );
-    return this.trackImage(image);
+
+    await this.trackImage(image);
+
+    return {
+      ...image,
+      token: await this.tokenService.signAsync(
+        {
+          fileId: image.id,
+          fileName: image.filename,
+          fileSize: String(image.fileSize),
+          url: image.url,
+          category: image.category,
+          userId: image.userId,
+        },
+        'IMAGE',
+      ),
+    };
   }
 
   async serviceUploadImage(
@@ -44,7 +64,8 @@ export class ImageStorageService {
       },
     });
     this.logger.log(`Image file (${image.id}) is uploaded from service`);
-    return this.trackImage(image);
+    await this.trackImage(image);
+    return image;
   }
 
   private async trackImage(file: File) {
@@ -57,7 +78,5 @@ export class ImageStorageService {
     this.logger.log(
       `Image file (${file.id}) tracking started (${tracking.id})`,
     );
-
-    return file;
   }
 }

@@ -39,7 +39,11 @@ export class VideoStorageController {
       throw new BadRequestException('no file provided');
     }
 
-    return this.videoStorageService.userUploadVideo(info, file);
+    const video = await this.videoStorageService.userUploadVideo(info, file);
+    return {
+      ...video,
+      fileSize: String(video.fileSize)
+    }
   }
 
   @HttpCode(200)
@@ -54,6 +58,10 @@ export class VideoStorageController {
       throw new BadRequestException('no file provided');
     }
 
-    return this.videoStorageService.serviceUploadVideo(info, file);
+    const video = await this.videoStorageService.serviceUploadVideo(info, file);
+    return {
+      ...video,
+      fileSize: String(video.fileSize)
+    }
   }
 }

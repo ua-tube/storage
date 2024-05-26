@@ -80,6 +80,7 @@ export class VideoStorageService implements OnApplicationBootstrap {
       ),
     );
     this.logger.log(`Video file (${video.id}) is sent to process service`);
+    
     return this.trackVideo(video);
   }
 
