@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../prisma';
-import {
-  ImageStorageController,
-  VideoStorageController,
-} from './controllers';
+import { ImageStorageController, VideoStorageController } from './controllers';
 import { ImageStorageService, VideoStorageService } from './services';
 import { JwtModule } from '@nestjs/jwt';
 import { ClientsModule, Transport } from '@nestjs/microservices';
@@ -52,10 +49,7 @@ import {
     ]),
     PrismaModule,
   ],
-  controllers: [
-    ImageStorageController,
-    VideoStorageController,
-  ],
+  controllers: [ImageStorageController, VideoStorageController],
   providers: [ImageStorageService, VideoStorageService],
 })
 export class StorageModule {}

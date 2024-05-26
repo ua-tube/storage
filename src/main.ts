@@ -17,9 +17,8 @@ async function bootstrap() {
   app.enableCors({
     origin: [configService.getOrThrow<string>('CLIENT_URL')],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    credentials: true
+    credentials: true,
   });
-
   app.enableVersioning({
     type: VersioningType.URI,
     prefix: 'v',

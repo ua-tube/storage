@@ -31,26 +31,18 @@ export class VideoStorageService implements OnApplicationBootstrap {
     this.videoProcessorClient
       .connect()
       .then(() =>
-        this.logger.log(
-          `${VIDEO_PROCESSOR_SERVICE} connection established`,
-        ),
+        this.logger.log(`${VIDEO_PROCESSOR_SERVICE} connection established`),
       )
       .catch(() =>
-        this.logger.error(
-          `${VIDEO_PROCESSOR_SERVICE} connection failed`,
-        ),
+        this.logger.error(`${VIDEO_PROCESSOR_SERVICE} connection failed`),
       );
     this.videoManagerClient
       .connect()
       .then(() =>
-        this.logger.log(
-          `${VIDEO_MANAGER_SERVICE} connection established`,
-        ),
+        this.logger.log(`${VIDEO_MANAGER_SERVICE} connection established`),
       )
       .catch(() =>
-        this.logger.error(
-          `${VIDEO_MANAGER_SERVICE} connection failed`,
-        ),
+        this.logger.error(`${VIDEO_MANAGER_SERVICE} connection failed`),
       );
   }
 

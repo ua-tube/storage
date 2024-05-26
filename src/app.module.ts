@@ -14,9 +14,9 @@ import { HealthModule } from './health/health.module';
       isGlobal: true,
       validationSchema: Joi.object({
         NODE_ENV: Joi.valid('development', 'production', 'test').required(),
-        CLIENT_URL: Joi.string().required(),
         HTTP_HOST: Joi.string().required(),
         HTTP_PORT: Joi.number().required(),
+        CLIENT_URL: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_IMAGE_UT_ISSUER: Joi.string().required(),
         JWT_VIDEO_UT_ISSUER: Joi.string().required(),
@@ -31,7 +31,7 @@ import { HealthModule } from './health/health.module';
     }),
     StorageModule,
     DiskCleanerModule,
-    HealthModule
+    HealthModule,
   ],
   providers: [
     {
