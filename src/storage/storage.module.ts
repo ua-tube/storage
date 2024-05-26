@@ -16,14 +16,7 @@ import {
 
 @Module({
   imports: [
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        subject: 'upload-token',
-        secret: configService.get<string>('JWT_SECRET'),
-        audience: configService.get<string>('JWT_AUDIENCE'),
-      }),
-    }),
+    JwtModule.register({}),
     ClientsModule.registerAsync([
       {
         name: VIDEO_MANAGER_SERVICE,

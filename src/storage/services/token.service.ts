@@ -15,7 +15,11 @@ export class TokenService {
   ): Promise<T> {
     try {
       return await this.jwtService.verifyAsync<T>(token, {
+        subject: 'upload-token',
+        secret: this.configService.get<string>('JWT_SECRET'),
+        audience: this.configService.get<string>('JWT_AUDIENCE'),
         issuer: this.configService.get<string>(`JWT_${issuer}_UT_ISSUER`),
+        ignoreExpiration: false,
       });
     } catch {
       throw new UnauthorizedException('Failed to validate upload token');
@@ -25,7 +29,10 @@ export class TokenService {
   async signAsync(payload: any, issuer: 'IMAGE' | 'VIDEO') {
     try {
       return await this.jwtService.signAsync(payload, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+        audience: this.configService.get<string>('JWT_AUDIENCE'),
         issuer: this.configService.get<string>(`JWT_${issuer}_UT_ISSUER`),
+        expiresIn: '5m',
       });
     } catch {
       return null;
