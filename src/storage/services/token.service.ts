@@ -29,6 +29,7 @@ export class TokenService {
   async signAsync(payload: any, issuer: 'IMAGE' | 'VIDEO') {
     try {
       return await this.jwtService.signAsync(payload, {
+        subject: 'upload-token',
         secret: this.configService.get<string>('JWT_SECRET'),
         audience: this.configService.get<string>('JWT_AUDIENCE'),
         issuer: this.configService.get<string>(`JWT_${issuer}_UT_ISSUER`),
