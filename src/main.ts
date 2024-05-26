@@ -29,6 +29,11 @@ async function bootstrap() {
   app.use(helmet.noSniff());
   app.use(helmet.hidePoweredBy());
   app.use(helmet.contentSecurityPolicy());
+  app.use(
+    helmet.crossOriginResourcePolicy({
+      policy: 'same-site',
+    }),
+  );
   app.use(mw());
   app.use('/', serveStatic(join(process.cwd(), 'public'), { maxAge: '1d' }));
 
