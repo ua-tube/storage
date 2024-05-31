@@ -15,7 +15,7 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   app.enableCors({
-    origin: [configService.getOrThrow<string>('CLIENT_URL')],
+    origin: configService.getOrThrow<string>('CLIENT_URL').split(','),
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   });
@@ -31,7 +31,9 @@ async function bootstrap() {
   app.use(helmet.contentSecurityPolicy());
   app.use(
     helmet.crossOriginResourcePolicy({
-      policy: 'same-site',
+      policy: configService.get('NODE_ENV') === 'development'
+        ? 'cross-origin'
+        : 'same-site',
     }),
   );
   app.use(mw());
