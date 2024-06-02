@@ -7,6 +7,7 @@ import { join } from 'path';
 import serveStatic from 'serve-static';
 import { AppModule } from './app.module';
 import { mw } from 'request-ip';
+import { NextFunction, Request, Response } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -38,7 +39,13 @@ async function bootstrap() {
     }),
   );
   app.use(mw());
-  app.use('/', serveStatic(join(process.cwd(), 'public'), { maxAge: '1d' }));
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (!req.url.includes('.m3u8')) {
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+    }
+    next();
+  });
+  app.use('/', serveStatic(join(process.cwd(), 'public')));
 
   app.setGlobalPrefix('/api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
