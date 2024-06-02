@@ -39,9 +39,6 @@ async function bootstrap() {
     }),
   );
   app.use(mw());
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    next();
-  });
   app.use(
     '/',
     serveStatic(join(process.cwd(), 'public'), {
