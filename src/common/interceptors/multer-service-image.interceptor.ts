@@ -8,7 +8,7 @@ import { imageMimetypes } from '../constants';
 export const multerServiceImageInterceptor = FileInterceptor('file', {
   storage: diskStorage({
     destination: async (req, _, callback) => {
-      if (!req.headers.category || !req.headers['group-id']) {
+      if (!req.headers?.category || !req.headers?.['group-id']) {
         return callback(new BadRequestException(), null);
       }
 

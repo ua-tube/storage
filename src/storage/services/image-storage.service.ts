@@ -63,11 +63,7 @@ export class ImageStorageService {
     this.logger.log(`Image file (${image.id}) is uploaded from service`);
 
     await this.trackImage(image);
-
-    return {
-      id: image.id,
-      url: image.url,
-    };
+    return image;
   }
 
   private async trackImage(file: File) {

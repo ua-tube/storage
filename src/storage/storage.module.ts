@@ -26,11 +26,10 @@ import {
           options: {
             urls: [configService.get<string>('RABBITMQ_URL')],
             queue: configService.get<string>('RABBITMQ_VIDEO_MANAGER_QUEUE'),
+            persistent: true,
             queueOptions: {
               durable: false,
             },
-            noAck: true,
-            persistent: true,
           },
         }),
       },
@@ -42,11 +41,10 @@ import {
           options: {
             urls: [configService.get<string>('RABBITMQ_URL')],
             queue: configService.get<string>('RABBITMQ_VIDEO_PROCESSOR_QUEUE'),
+            persistent: true,
             queueOptions: {
               durable: false,
             },
-            noAck: true,
-            persistent: true,
           },
         }),
       },

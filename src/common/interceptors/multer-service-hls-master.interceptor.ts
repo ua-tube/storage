@@ -8,7 +8,7 @@ import { extname } from 'node:path';
 export const multerServiceHlsMasterInterceptor = FileInterceptor('file', {
   storage: diskStorage({
     destination: async (req, _, callback) => {
-      if (!req.headers.category || !req.headers['group-id']) {
+      if (!req.headers?.category || !req.headers?.['group-id']) {
         return callback(new BadRequestException(), null);
       }
 
@@ -18,7 +18,9 @@ export const multerServiceHlsMasterInterceptor = FileInterceptor('file', {
         'videos',
         req.headers.category as string,
         req.headers['group-id'] as string,
+        (req.headers?.['hls-id'] as string) || '',
       );
+
       await mkdir(hlsMasterFolderPath, { recursive: true });
       callback(null, hlsMasterFolderPath);
     },

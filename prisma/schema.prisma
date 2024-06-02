@@ -11,7 +11,7 @@ model File {
   id               String        @id @db.Uuid
   groupId          String        @map("group_id") @db.Uuid
   category         String
-  filename         String
+  filename         String        @map("filename")
   originalFileName String        @map("original_filename")
   fileSize         BigInt        @map("file_size")
   url              String
@@ -40,8 +40,4 @@ enum FileStatus {
   FailedToRemove
 
   @@map("file_status")
-}
-
-model VideoHlsFolder {
-  id String @id @default(uuid()) @db.Uuid
 }

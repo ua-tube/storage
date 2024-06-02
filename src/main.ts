@@ -31,9 +31,10 @@ async function bootstrap() {
   app.use(helmet.contentSecurityPolicy());
   app.use(
     helmet.crossOriginResourcePolicy({
-      policy: configService.get('NODE_ENV') === 'development'
-        ? 'cross-origin'
-        : 'same-site',
+      policy:
+        configService.get('NODE_ENV') === 'development'
+          ? 'cross-origin'
+          : 'same-site',
     }),
   );
   app.use(mw());

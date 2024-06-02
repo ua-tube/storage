@@ -5,6 +5,7 @@ import {
   Logger,
   NestInterceptor,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -20,7 +21,7 @@ export class LoggingInterceptor implements NestInterceptor {
   }
 
   private logHttpCall(context: ExecutionContext, next: CallHandler) {
-    const request = context.switchToHttp().getRequest();
+    const request: Request = context.switchToHttp().getRequest();
     const userAgent = request.get('user-agent') || '';
     const { clientIp: ip, method, path: url } = request;
 

@@ -58,7 +58,7 @@ export class ImageStorageController {
     const image = await this.imageStorageService.serviceUploadImage(info, file);
     return {
       ...image,
-      fileSize: String(image.fileSize)
+      fileSize: image.fileSize.toString()
     }
   }
 }

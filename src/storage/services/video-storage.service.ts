@@ -12,7 +12,6 @@ import {
   VIDEO_PROCESSOR_SERVICE,
 } from '../../common/constants';
 import { VideoUploadedEvent } from '../../common/events';
-import { TServiceUploadInfo } from '../../common/types';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()
@@ -80,27 +79,7 @@ export class VideoStorageService implements OnApplicationBootstrap {
       ),
     );
     this.logger.log(`Video file (${video.id}) is sent to process service`);
-    
-    return this.trackVideo(video);
-  }
 
-  async serviceUploadVideo(
-    info: TServiceUploadInfo,
-    file: Express.Multer.File,
-  ) {
-    const video = await this.prisma.file.create({
-      data: {
-        id: info.fileId,
-        groupId: info.groupId,
-        category: info.category,
-        filename: file.filename,
-        fileSize: BigInt(file.size),
-        originalFileName: file.originalname,
-        url: `/videos/${info.category}/${info.groupId}/${file.filename}`,
-      },
-    });
-
-    this.logger.log(`Video file (${video.id}) is uploaded from service`);
     return this.trackVideo(video);
   }
 
