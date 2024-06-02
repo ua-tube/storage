@@ -34,17 +34,14 @@ export class ImageStorageService {
 
     return {
       ...image,
-      token: await this.tokenService.signAsync(
-        {
-          fileId: image.id,
-          fileName: image.filename,
-          fileSize: String(image.fileSize),
-          url: image.url,
-          category: image.category,
-          userId: image.userId,
-        },
-        'IMAGE',
-      ),
+      token: await this.tokenService.signImageTokenAsync({
+        fileId: image.id,
+        fileName: image.filename,
+        fileSize: String(image.fileSize),
+        url: image.url,
+        category: image.category,
+        userId: image.userId,
+      }),
     };
   }
 
@@ -64,8 +61,13 @@ export class ImageStorageService {
       },
     });
     this.logger.log(`Image file (${image.id}) is uploaded from service`);
+
     await this.trackImage(image);
-    return image;
+
+    return {
+      id: image.id,
+      url: image.url,
+    };
   }
 
   private async trackImage(file: File) {

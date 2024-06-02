@@ -4,6 +4,7 @@ import {
   HttpCode,
   Post,
   UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -13,6 +14,8 @@ import {
   AuthVideoUploadTokenGuard,
 } from '../../common/guards';
 import {
+  multerServiceHlsMasterInterceptor,
+  multerServiceHlsSegmentsInterceptor,
   multerServiceVideoInterceptor,
   multerUserVideoInterceptor,
 } from '../../common/interceptors';
@@ -42,8 +45,8 @@ export class VideoStorageController {
     const video = await this.videoStorageService.userUploadVideo(info, file);
     return {
       ...video,
-      fileSize: String(video.fileSize)
-    }
+      fileSize: video.fileSize.toString(),
+    };
   }
 
   @HttpCode(200)
@@ -61,7 +64,37 @@ export class VideoStorageController {
     const video = await this.videoStorageService.serviceUploadVideo(info, file);
     return {
       ...video,
-      fileSize: String(video.fileSize)
+      fileSize: video.fileSize.toString(),
+    };
+  }
+
+  @HttpCode(200)
+  @UseGuards(AuthInternalGuard)
+  @UseInterceptors(multerServiceHlsMasterInterceptor)
+  @Post('internal/hls/master')
+  async serviceUploadVideoHlsMaster(
+    @UploadedFile() file: Express.Multer.File,
+    @ServiceUploadInfo() info: TServiceUploadInfo,
+  ) {
+    if (!file) {
+      throw new BadRequestException('no file provided');
     }
+
+    return 'ok';
+  }
+
+  @HttpCode(200)
+  @UseGuards(AuthInternalGuard)
+  @UseInterceptors(multerServiceHlsSegmentsInterceptor)
+  @Post('internal/hls/segments')
+  async serviceUploadVideoHlsSegments(
+    @UploadedFiles() files: Express.Multer.File[],
+    @ServiceUploadInfo() info: TServiceUploadInfo,
+  ) {
+    if (!files) {
+      throw new BadRequestException('no files provided');
+    }
+
+    return 'ok';
   }
 }

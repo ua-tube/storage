@@ -26,13 +26,13 @@ export class TokenService {
     }
   }
 
-  async signAsync(payload: any, issuer: 'IMAGE' | 'VIDEO') {
+  async signImageTokenAsync(payload: any) {
     try {
       return await this.jwtService.signAsync(payload, {
         subject: 'upload-token',
         secret: this.configService.get<string>('JWT_SECRET'),
         audience: this.configService.get<string>('JWT_AUDIENCE'),
-        issuer: this.configService.get<string>(`JWT_${issuer}_UT_ISSUER`),
+        issuer: this.configService.get<string>(`JWT_IMAGE_UT_ISSUER`),
         expiresIn: '5m',
       });
     } catch {

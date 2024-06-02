@@ -1,38 +1,39 @@
 import { BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { mkdir } from 'fs/promises';
+import { mkdir } from 'node:fs/promises';
 import { diskStorage } from 'multer';
-import { extname, join } from 'node:path';
-import { videoMimetypes } from '../constants';
+import { join } from 'node:path';
+import { extname } from 'node:path';
 
-export const multerServiceVideoInterceptor = FileInterceptor('file', {
+export const multerServiceHlsMasterInterceptor = FileInterceptor('file', {
   storage: diskStorage({
-    destination: async (req, file, callback) => {
+    destination: async (req, _, callback) => {
       if (!req.headers.category || !req.headers['group-id']) {
         return callback(new BadRequestException(), null);
       }
 
-      const videosFolderPath = join(
+      const hlsMasterFolderPath = join(
         process.cwd(),
         'public',
         'videos',
         req.headers.category as string,
         req.headers['group-id'] as string,
       );
-      await mkdir(videosFolderPath, { recursive: true });
-      callback(null, videosFolderPath);
+      await mkdir(hlsMasterFolderPath, { recursive: true });
+      callback(null, hlsMasterFolderPath);
     },
-    filename: (req, file, callback) => {
-      callback(null, `${req.headers['file-id']}${extname(file.originalname)}`);
+    filename(_, file, callback) {
+      callback(null, file.originalname);
     },
   }),
-  fileFilter(req, file, callback) {
-    if (!videoMimetypes.includes(file.mimetype)) {
+  fileFilter(_, file, callback) {
+    if (extname(file.originalname) !== '.m3u8') {
       return callback(
         new BadRequestException('invalid file type provided'),
         false,
       );
     }
+
     callback(null, true);
   },
 });

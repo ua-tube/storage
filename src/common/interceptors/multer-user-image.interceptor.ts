@@ -1,14 +1,14 @@
 import { BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { mkdir } from 'fs/promises';
+import { mkdir } from 'node:fs/promises';
 import { diskStorage } from 'multer';
 import { extname, join } from 'node:path';
 import { imageMimetypes } from '../constants';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 export const multerUserImageInterceptor = FileInterceptor('file', {
   storage: diskStorage({
-    destination: async (req: any, file, callback) => {
+    destination: async (req: any, _, callback) => {
       const imagesFolderPath = join(
         process.cwd(),
         'public',
@@ -19,11 +19,11 @@ export const multerUserImageInterceptor = FileInterceptor('file', {
       await mkdir(imagesFolderPath, { recursive: true });
       callback(null, imagesFolderPath);
     },
-    filename: (req, file, callback) => {
+    filename: (_, file, callback) => {
       callback(null, `${randomUUID()}${extname(file.originalname)}`);
     },
   }),
-  fileFilter(req, file, callback) {
+  fileFilter(_, file, callback) {
     if (!imageMimetypes.includes(file.mimetype)) {
       return callback(
         new BadRequestException('invalid file type provided'),
