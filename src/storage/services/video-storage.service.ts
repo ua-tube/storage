@@ -1,6 +1,7 @@
 import {
   Inject,
   Injectable,
+  InternalServerErrorException,
   Logger,
   OnApplicationBootstrap,
 } from '@nestjs/common';
@@ -13,6 +14,8 @@ import {
 } from '../../common/constants';
 import { VideoUploadedEvent } from '../../common/events';
 import { lastValueFrom } from 'rxjs';
+import { rm } from 'fs/promises';
+import { join } from 'path';
 
 @Injectable()
 export class VideoStorageService implements OnApplicationBootstrap {
@@ -63,12 +66,23 @@ export class VideoStorageService implements OnApplicationBootstrap {
       `Video file (${video.id}) is uploaded from user (${video.userId})`,
     );
 
-    await lastValueFrom(
-      this.videoManagerClient.send('set_processing_status', {
-        videoId: video.id,
-        status: 'VideoUploaded',
-      }),
-    );
+    try {
+      await lastValueFrom(
+        this.videoManagerClient.send('set_processing_status', {
+          videoId: video.id,
+          status: 'VideoUploaded',
+        }),
+      );
+    } catch {
+      await rm(
+        join(process.cwd(), 'public', 'videos', video.category, video.id),
+        { recursive: true },
+      );
+      await this.prisma.file.delete({ where: { id: video.id } });
+      throw new InternalServerErrorException(
+        'Video Manager processing status update error',
+      );
+    }
     this.videoProcessorClient.emit(
       'process_video',
       new VideoUploadedEvent(
